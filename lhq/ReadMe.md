@@ -1,7 +1,7 @@
-A basic express app
-First npm init
-npm install xxxxxxx (install express)
-
-express -e
-
-create ejs index.js , delete users.js cuz not useful
+To run,
+download node.js
+run the following:
+  npm install
+  npm start
+Go to browser:
+  localhost:3000
