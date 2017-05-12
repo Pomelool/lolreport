@@ -1,0 +1,16 @@
+Install Atom
+File -> settings -> install
+click install, search for terminal, install platformio-ide-terminal
+search typescript, install first one
+
+Go to nodejs website download nodejs
+Install Node.js
+
+Use atom terminal
+
+Step 1: npm install -g @angular/cli@latest
+Step 2: ng new name-of-project (ignore if project already created)
+Step 3: cd name-of-project (ignore if project already created)
+Step 4: npm install @angular/cli --save-dev
+Step 5: npm install @angular/compiler-cli --save-dev
+Step 6: ng serve
