@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>API TEST</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <form id="form1" action="/" method="post">
+      <input type="text" id="input-me" name="query" value="<%=val %>">
+      <button type="submit" id="btn-me" value="submit" name="button">Search</button>
+    </form>
+    <p id="result"><%= result %></p>
+    <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+    <script src="/javascripts/btn.js"></script>
+  </body>
+</html>
