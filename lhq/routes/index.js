@@ -28,6 +28,12 @@ router.post('/', function(req, res, next) {
         var accountId = data['accountId'];
         var loadMatches = match.fetch100(accountId,apikey)
         .then(function(matches){
+          var pml = [];
+          for (var i = 0; i < matches['matches'].length; i++) {
+            pml.push(matches['matches'][i]);
+          }
+          /*PML is player match list
+          /*Add Code Here to check tag */
           res.render('index', { result: body,
                                 val: search,
                                 matches: matches
