@@ -1,13 +1,27 @@
-
-function checkMinionsSlayer(tags, data){
-  return 1;
-}
+var Promise = require("bluebird");
 
 module.exports = {
   checkTags: function (data) {
-    var tags = [];
+    return new Promise(function(resolve, reject){
+      var tags = [];
 
-    checkMinionsSlayer(tags, data);
-    return tags;
+      var checkMinionsSlayer =  new Promise(function(resolve, reject){
+          resolve(tags.push(1));
+        });
+
+      var checkNeverCs = new Promise(function(resolve, reject){
+          resolve(tags.push(2));
+        });
+
+      Promise.all([checkMinionsSlayer,
+                   checkNeverCs
+                 ])
+              .then(function(){
+                resolve(tags);
+              })
+              .catch(reason => {
+                console.log(reason);
+              });
+    });
   }
 };
