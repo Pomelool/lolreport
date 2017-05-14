@@ -1,15 +1,16 @@
 var express = require('express');
 var request = require('request');
-var rp = require('request-promise');
+var Promise = require("bluebird");
+var rp = Promise.promisifyAll(require("request"), {multiArgs: true});
 
 var match = require('../algorithms/matches');
 var tag = require('../algorithms/tag');
 
-var Promise = require("bluebird");
+
 
 var router = express.Router();
 
-var apikey =  "api_key=RGAPI-78d17105-595f-471d-8dcc-17a954c91fca";
+var apikey =  "api_key=RGAPI-76ec015c-d650-4411-a0fe-0fac31572163";
 var urlprefix = "https://na1.api.riotgames.com/lol/summoner/v3/summoners/by-name/"
 
 /* GET home page. */
@@ -47,19 +48,27 @@ router.post('/', function(req, res, next) {
             }
 
             var matchuri = "https://na1.api.riotgames.com/lol/match/v3/matches/";
+            var uris = [];
             for (var i = 0; i < matchidList.length; i++) {
-              var uris = [];
               uris.push(matchuri + matchidList[i] + "?" + apikey);
             }
-            const matchesPromises = uris.map(url => rp(url));
-            Promise.all(matchesPromises).then((matchData) => {
-              tag.checkTags(matchData).then((tags) =>{
-                console.log(tags);
-                res.render('index', { result: body,
-                                      val: search,
-                                      matches: tags
-                                    });
-              });
+            Promise.map(uris, function(url) {
+                return rp.getAsync(url).spread(function(response,body) {
+                    var answer = JSON.parse(body);
+                    return answer;
+                });
+            })
+            .then(function(results) {
+                 // results is an array of all the parsed bodies in order
+                 tag.checkTags(accountId, results).then((tags) =>{
+                   res.render('index', { result: body,
+                                         val: search,
+                                         matches: results
+                                       });
+                 });
+            }).catch(function(err) {
+                console.log(err);
+                 // handle error here
             });
           }
         });
