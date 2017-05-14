@@ -17,7 +17,7 @@ var urlprefix = "https://na1.api.riotgames.com/lol/summoner/v3/summoners/by-name
 router.get('/', function(req, res, next) {
   res.render('index', { result: 'Please Search',
                         val: "",
-                        matches:""
+                        tags:""
                       });
 });
 
@@ -63,7 +63,7 @@ router.post('/', function(req, res, next) {
                  tag.checkTags(accountId, results).then((tags) =>{
                    res.render('index', { result: body,
                                          val: search,
-                                         matches: results
+                                         tags: tags
                                        });
                  });
             }).catch(function(err) {
@@ -77,7 +77,7 @@ router.post('/', function(req, res, next) {
         /*Not found any result by id*/
         res.render('index', { result: 'Err!',
                               val: '',
-                              matches:''
+                              tags:''
                             });
       }
     });
@@ -86,7 +86,7 @@ router.post('/', function(req, res, next) {
     /*No search*/
     res.render('index', { result: 'Not Found',
                           val:'',
-                          matches:''
+                          tags:''
                         });
   }
 });
