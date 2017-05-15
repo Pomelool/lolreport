@@ -1,7 +1,7 @@
 var Promise = require("bluebird");
 
 module.exports = {
-  checkTags: function (aid, data) {
+  checkTags: function (aid, data, renderObject) {
     return new Promise(function(resolve, reject){
       /*participant number */
       var tags = [];
@@ -39,10 +39,11 @@ module.exports = {
           var avgtmk = tmk/(time/60.0);
           console.log('Minions Slayer: ' + avgtmk + (" (> 6.2/min)"));
           if(avgtmk >= 6.5){
-            resolve(tags.push('Minions_Slayer'));
+            renderObject["tags"].push('Minions_Slayer');
+            resolve(renderObject);
           }
           else{
-            resolve(tags);
+            resolve(renderObject);
           }
         });
 
@@ -54,10 +55,11 @@ module.exports = {
           var avgnmkej = nmkej/playerdts.length;
           console.log('Your house is Mine: ' + avgnmkej + (" (> 20/match)"));
           if(avgnmkej >= 20){
-            resolve(tags.push('Your_House_Is_Mine'));
+            renderObject["tags"].push('Your_House_Is_Mine');
+            resolve(renderObject);
           }
           else{
-            resolve(tags);
+            resolve(renderObject);
           }
       });
 
@@ -65,7 +67,7 @@ module.exports = {
                    checkYourHouseIsMine
                  ])
               .then(function(){
-                resolve(tags);
+                resolve(renderObject);
               })
               .catch(reason => {
                 console.log(reason);

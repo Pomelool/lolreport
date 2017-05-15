@@ -5,7 +5,7 @@ var rp = Promise.promisifyAll(require("request"), {multiArgs: true});
 
 var match = require('../algorithms/matches');
 var tag = require('../algorithms/tag');
-
+var diagram = require('../algorithms/diagrams');
 
 
 var router = express.Router();
@@ -29,12 +29,8 @@ router.post('/', function(req, res, next) {
       if (!error && response.statusCode == 200) {
         var data = JSON.parse(body);
         var accountId = data['accountId'];
-        match.fetch(accountId,apikey).then(function(matches){
-          var pml = [];
-          for (var i = 0; i < matches.length; i++) {
-            pml.push(matches[i]);
-          }
-          if (pml.length < 10) {
+        match.fetch(accountId,apikey, 20).then(function(matches){
+          if (matches.length < 20) {
               /*render not enough matches*/
               console.log("not enough matches found");
           }
@@ -42,6 +38,11 @@ router.post('/', function(req, res, next) {
             /*Get matchlist complete now render*/
             /*PML is player match list
             /*Add Code Here to check tag */
+            var matches20 = matches.slice(0,20);
+            var pml = [];
+            for (var i = 0; i < matches20.length; i++) {
+              pml.push(matches20[i]);
+            }
             var matchidList = [];
             for (var i = 0; i < pml.length; i++) {
               matchidList.push(pml[i]["gameId"]);
@@ -58,14 +59,18 @@ router.post('/', function(req, res, next) {
                     return answer;
                 });
             })
-            .then(function(results) {
-                 // results is an array of all the parsed bodies in order
-                 tag.checkTags(accountId, results).then((tags) =>{
-                   res.render('index', { result: body,
-                                         val: search,
-                                         tags: tags
-                                       });
-                 });
+            .then(function(dt) {
+                 // dt is an array of all the parsed bodies in order
+                 var renderObject = {
+                   result: body,
+                   val: search,
+                   tags:[]
+                 };
+                 tag.checkTags(accountId, dt, renderObject)
+                  .then((renderObject) => diagram.pie1(matches, renderObject))
+                  .then((renderObject)=>{
+                   res.render('index', renderObject);
+                  });
             }).catch(function(err) {
                 console.log(err);
                  // handle error here
